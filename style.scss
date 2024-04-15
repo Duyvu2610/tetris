@@ -1,0 +1,43 @@
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f1f1f1;
+    position: relative;
+}
+
+.tetris {
+  width: 70%;
+  background: #000;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
+
+
+  &__main{
+    position: relative;
+  }
+
+  //&__right{
+  //  flex-wrap: wrap;
+  //  width: 24%;
+  //  height: 100%;
+  //  background: white;
+  //}
+  //
+  //&__left{
+  //  flex-wrap: wrap;
+  //  width: 24%;
+  //  height: 100%;
+  //  background: white;
+  //}
+}
