@@ -48,11 +48,44 @@ const PIECES = [
 ];
 // init array 20x10
 let board = Array.from({ length: 20 }, () => Array(10).fill(EMPTY));
-
+let currentPiece = createPiece();
 // onLoad
 window.onload = function () {
     render();
+    drawPiece(currentPiece);
 }
+
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'ArrowUp') {
+        // rotate the piece
+    } else if (event.key === 'ArrowRight') {
+        if (canMove(currentPiece, 'right')) {
+            clearPiece(currentPiece);
+            currentPiece.x++;
+            drawPiece(currentPiece);
+        }
+    } else if (event.key === 'ArrowDown') {
+        if (canMove(currentPiece, 'down')) {
+            clearPiece(currentPiece);
+            currentPiece.y++;
+            drawPiece(currentPiece);
+        } else {
+            // If the piece can't move down, create a new piece
+            updateBoard(currentPiece);
+            checkAndDeleteFullRows();
+            currentPiece = createPiece();
+        }
+    } else if (event.key === 'ArrowLeft') {
+        if (canMove(currentPiece, 'left')) {
+            clearPiece(currentPiece);
+            currentPiece.x--;
+            drawPiece(currentPiece);
+        }
+    }
+    console.log(currentPiece)
+    console.log(board)
+
+});
 
 // render
 function render() {
@@ -76,48 +109,132 @@ function render() {
     });
 }
 
-function randomPiece() {
+function createPiece() {
     let r = Math.floor(Math.random() * PIECES.length); // random index into PIECES
-    return new Piece(PIECES[r][0], PIECES[r][1]);
+    let piece = PIECES[r][0];
+    let color = PIECES[r][1];
+
+    // start from top middle of the board
+    let x = Math.floor(board[0].length / 2) - Math.ceil(piece[0].length / 2);
+    let y = 0;
+
+    return { piece, color, x, y };
 }
 
-function createPiece(shape, color) {
-    return {
-        shape: shape,
-        color: color,
-        tetrominoN: 0, // we start from the first pattern
-        activeTetromino: shape[0],
-        x: 0,
-        y: 0
-    };
+function drawPiece(pieceObject) {
+    for (let r = 0; r < pieceObject.piece.length; r++) {
+        for (let c = 0; c < pieceObject.piece[r].length; c++) {
+            // we draw only occupied squares
+            if (pieceObject.piece[r][c]) {
+                let cellElement = document.querySelector(`[data-row="${pieceObject.y + r}"][data-col="${pieceObject.x + c}"]`);
+                if (cellElement) {
+                    cellElement.style.backgroundColor = pieceObject.color;
+                }
+            }
+        }
+    }
 }
 
-function moveDown(piece) {
-    return {
-        ...piece,
-        y: piece.y + 1
-    };
+function clearPiece(pieceObject) {
+    for (let r = 0; r < pieceObject.piece.length; r++) {
+        for (let c = 0; c < pieceObject.piece[r].length; c++) {
+            // we clear only occupied squares
+            if (pieceObject.piece[r][c]) {
+                let cellElement = document.querySelector(`[data-row="${pieceObject.y + r}"][data-col="${pieceObject.x + c}"]`);
+                if (cellElement) {
+                    cellElement.style.backgroundColor = 'white';
+                }
+            }
+        }
+    }
 }
 
-function moveRight(piece) {
-    return {
-        ...piece,
-        x: piece.x + 1
-    };
+function canMove(pieceObject, direction) {
+    for (let r = 0; r < pieceObject.piece.length; r++) {
+        for (let c = 0; c < pieceObject.piece[r].length; c++) {
+            // we check only occupied squares
+            if (pieceObject.piece[r][c]) {
+                let nextX = pieceObject.x + c;
+                let nextY = pieceObject.y + r;
+                if (direction === 'down') {
+                    if (board[nextY][nextX] !== EMPTY) {
+                        return false;
+                    }
+                    // check if below cell is within the board
+                    if (pieceObject.y + r + 1 >= board.length) {
+                        return false;
+                    }
+                    // check if below cell is not empty
+                    if (board[pieceObject.y + r + 1][pieceObject.x + c] !== EMPTY) {
+                        return false;
+                    }
+
+                } else if (direction === 'left') {
+                    if (board[nextY][nextX] !== EMPTY) {
+                        return false;
+                    }
+                    // check if left cell is within the board
+                    if (pieceObject.x + c - 1 < 0) {
+                        return false;
+                    }
+                    // check if left cell is not empty
+                    if (board[pieceObject.y + r][pieceObject.x + c - 1] !== EMPTY) {
+                        return false;
+                    }
+                } else if (direction === 'right') {
+                    if (board[nextY][nextX] !== EMPTY) {
+                        return false;
+                    }
+                    // check if right cell is within the board
+                    if (pieceObject.x + c + 1 >= board[0].length) {
+                        return false;
+                    }
+                    // check if right cell is not empty
+                    if (board[pieceObject.y + r][pieceObject.x + c + 1] !== EMPTY) {
+                        return false;
+                    }
+                }
+            }
+        }
+    }
+    return true;
 }
 
-function moveLeft(piece) {
-    return {
-        ...piece,
-        x: piece.x - 1
-    };
+
+function updateBoard(pieceObject) {
+    for (let r = 0; r < pieceObject.piece.length; r++) {
+        for (let c = 0; c < pieceObject.piece[r].length; c++) {
+            // we update only occupied squares
+            if (pieceObject.piece[r][c]) {
+                board[pieceObject.y + r][pieceObject.x + c] = 1;
+            }
+        }
+    }
 }
 
-function rotate(piece) {
-    const tetrominoN = (piece.tetrominoN + 1) % piece.shape.length;
-    return {
-        ...piece,
-        tetrominoN: tetrominoN,
-        activeTetromino: piece.shape[tetrominoN]
-    };
+function checkAndDeleteFullRows() {
+    for (let r = 0; r < board.length; r++) {
+        let isRowFull = true;
+        for (let c = 0; c < board[r].length; c++) {
+            if (board[r][c] !== 1) {
+                isRowFull = false;
+                break;
+            }
+        }
+        if (isRowFull) {
+            // remove the row
+            board.splice(r, 1);
+            // add an empty row at the top
+            board.unshift(Array(board[0].length).fill(EMPTY));
+
+            // move all rows above the deleted row down by one
+            for (let rAbove = r - 1; rAbove >= 0; rAbove--) {
+                for (let c = 0; c < board[rAbove].length; c++) {
+                    board[rAbove + 1][c] = board[rAbove][c];
+                }
+            }
+            // clear the top row
+            board[0] = Array(board[0].length).fill(EMPTY);
+        }
+    }
 }
