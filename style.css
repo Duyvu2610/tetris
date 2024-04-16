@@ -1,29 +1,36 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-.wrapper {
+.container {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  background-color: #f1f1f1;
-  position: relative;
 }
 
-.tetris {
-  width: 70%;
-  background: #000;
-  position: relative;
+
+.grid {
+  width: 200px;
+  height: 400px;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 30px;
-}
-.tetris__main {
-  position: relative;
+  flex-wrap: wrap;
+  background-color: yellow;
 }
 
-/*# sourceMappingURL=style.css.map */
+.grid div {
+  height: 20px;
+  width: 20px;
+}
+
+.tetromino {
+  background-color: blue;
+}
+
+
+.mini-grid {
+  margin-left: 50px;
+  width: 80px;
+  height: 80px;
+  display: flex;
+  flex-wrap: wrap;
+  background-color: yellow;
+}
+
+.mini-grid div {
+  height: 20px;
+  width: 20px;
+}
