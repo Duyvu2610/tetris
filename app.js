@@ -10,19 +10,6 @@ window.onload = () => {
   const volumeValue = document.querySelector('#volume-value');
   const scoreDisplay = document.querySelector('#score')
   const startBtn = document.querySelector('#start-button')
-  const displaySquares = document.querySelectorAll('.mini-grid div')
-
-  // biến let
-  let level = 1;
-  let squares = [];
-  let nextRandom = 0
-  let timerId
-  let score = 0
-  let obstacles = [];
-  let currentPosition = 4
-  let currentRotation = ROTATE_0DEG
-  let randomNumber = Math.floor(Math.random()*pieces.length)
-  let currentPiece = pieces[randomNumber][currentRotation]
 
   // biến const
   const keyMap = {
@@ -157,50 +144,34 @@ window.onload = () => {
   const displayWidth = 4
   const displayIndex = 0
 
-  // Event listeners
-  replayButton.addEventListener('click', () => {
-    resetGameState();
-  })
-  levelButtons.forEach(button => {
-    changeLevelBtnColor();
-    button.addEventListener('click', function() {
+  // biến let
+  let level = 1;
+  let squares = [];
+  let nextRandom = 0
+  let timerId
+  let score = 0
+  let obstacles = [];
+  let currentPosition = 4
+  let currentRotation = ROTATE_0DEG
+  let randomNumber = Math.floor(Math.random()*pieces.length)
+  let currentPiece = pieces[randomNumber][currentRotation]
 
-      level = this.value;
-      changeLevelBtnColor();
-    });
-  });
-  volumeControl.addEventListener('input', function() {
-    // Assuming you have an audio element with the id 'audio'
-    const audio = document.querySelector('#audio');
-    // audio.volume = this.value;
+  // hamf init
+  // Create main grid and taken blocks in one loop
+  for (let i = 0; i < 210; i++) { // 200 cells for the grid + 10 taken cells
+    const div = document.createElement('div');
+    div.classList.add('cell');
+    if (i >= 200) div.classList.add('block'); // Last 10 cells are taken
+    grid.appendChild(div);
+    squares.push(div); // Add the created div to the squares array
+  }
+  // Tạo lưới phụ (mini-grid) với 16 ô
+  for (let i = 0; i < 16; i++) {
+    const div = document.createElement('div');
+    miniGrid.appendChild(div);
+  }
+  const displaySquares = document.querySelectorAll('.mini-grid div')
 
-    // Update the displayed volume value
-    volumeValue.textContent = `${Math.round(this.value * 100)}%`;
-  });
-  newGame.addEventListener('click', () => {
-    endElement.style.display = 'none'
-    window.location.reload()
-  })
-  startBtn.addEventListener('click', () => {
-    console.log(level)
-    if (timerId) {
-      clearInterval(timerId)
-      timerId = null
-    } else {
-      draw()
-      if (level === '2') {
-        obstacles = [142, 143, 147, 148];
-      }
-      obstacles.forEach(index => {
-        squares[index].classList.add('taken');
-        squares[index].style.backgroundColor = 'black';
-      });
-      timerId = setInterval(moveDown, time)
-      nextRandom = Math.floor(Math.random() * pieces.length)
-      displayShape()
-    }
-  })
-  document.addEventListener('keyup', control)
 
   // functions
   function resetGameState() {
@@ -251,21 +222,6 @@ window.onload = () => {
     // Hide game over screen
     endElement.style.display = 'none';
 
-  }
-
-  // Create main grid and taken blocks in one loop
-  for (let i = 0; i < 210; i++) { // 200 cells for the grid + 10 taken cells
-    const div = document.createElement('div');
-    div.classList.add('cell');
-    if (i >= 200) div.classList.add('block'); // Last 10 cells are taken
-    grid.appendChild(div);
-    squares.push(div); // Add the created div to the squares array
-  }
-
-  // Tạo lưới phụ (mini-grid) với 16 ô
-  for (let i = 0; i < 16; i++) {
-    const div = document.createElement('div');
-    miniGrid.appendChild(div);
   }
 
   // draw the Piece
@@ -575,4 +531,49 @@ window.onload = () => {
       });
     }, 1000);
   }
+
+  // Event listeners
+  replayButton.addEventListener('click', () => {
+    resetGameState();
+  })
+  levelButtons.forEach(button => {
+    changeLevelBtnColor();
+    button.addEventListener('click', function() {
+
+      level = this.value;
+      changeLevelBtnColor();
+    });
+  });
+  volumeControl.addEventListener('input', function() {
+    // Assuming you have an audio element with the id 'audio'
+    const audio = document.querySelector('#audio');
+    // audio.volume = this.value;
+
+    // Update the displayed volume value
+    volumeValue.textContent = `${Math.round(this.value * 100)}%`;
+  });
+  newGame.addEventListener('click', () => {
+    endElement.style.display = 'none'
+    window.location.reload()
+  })
+  startBtn.addEventListener('click', () => {
+    console.log(level)
+    if (timerId) {
+      clearInterval(timerId)
+      timerId = null
+    } else {
+      draw()
+      if (level === '2') {
+        obstacles = [142, 143, 147, 148];
+      }
+      obstacles.forEach(index => {
+        squares[index].classList.add('taken');
+        squares[index].style.backgroundColor = 'black';
+      });
+      timerId = setInterval(moveDown, time)
+      nextRandom = Math.floor(Math.random() * pieces.length)
+      displayShape()
+    }
+  })
+  document.addEventListener('keyup', control)
 }
