@@ -1,0 +1,162 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.container {
+  display: flex;
+  position: relative;
+}
+.container #start-button {
+  width: 40px;
+  height: 40px;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
+}
+.container .volume-control {
+  width: 231px;
+  position: absolute;
+  top: 50%;
+  right: 0;
+  display: flex;
+  justify-content: end;
+  align-items: center;
+}
+.container .volume-control .volume {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+.container .volume-control #volume-value {
+  position: absolute;
+}
+.container .score {
+  position: absolute;
+  bottom: 0;
+  left: -150px;
+  padding: 20px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  border-radius: 16px;
+}
+.container .score .level-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.container .score .level-buttons button {
+  background: white;
+  padding: 10px 20px;
+  font-size: 20px;
+  color: gray;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s ease-in-out;
+  border: 1px solid #5649f1;
+}
+.container .score .level-buttons button:hover {
+  scale: 1.1;
+}
+.container .next {
+  position: absolute;
+  top: 0;
+  right: 50px;
+}
+.container .time {
+  position: absolute;
+  top: 0;
+  left: -150px;
+  font-weight: bold;
+}
+
+.grid {
+  width: 200px;
+  height: 400px;
+  display: flex;
+  flex-wrap: wrap;
+  background-color: gray;
+  border-radius: 8px;
+}
+
+.cell {
+  height: 20px;
+  width: 20px;
+}
+.cell.piece {
+  background-color: blue;
+}
+.cell.obstacle {
+  background-color: red;
+}
+
+.mini-grid {
+  margin-left: 50px;
+  margin-top: 30px;
+  width: 80px;
+  height: 80px;
+  display: flex;
+  flex-wrap: wrap;
+  background-color: gray;
+}
+.mini-grid div {
+  height: 20px;
+  width: 20px;
+}
+
+.end {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  font-size: 40px;
+}
+.end .content {
+  background: #f1e3e3;
+  padding: 40px;
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  box-shadow: 0 0 10px 0 rgba(255, 255, 255, 0.9);
+}
+.end h4 {
+  text-align: center;
+  font-weight: bold;
+}
+.end .btn {
+  padding: 10px 20px;
+  background: #7d7d7d;
+  font-size: 20px;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  text-transform: uppercase;
+  font-weight: bold;
+  transition: all 0.3s ease-in-out;
+}
+.end .btn--green {
+  background: #419730;
+}
+.end .btn:hover {
+  scale: 1.1;
+}
+
+/*# sourceMappingURL=styles.css.map */
